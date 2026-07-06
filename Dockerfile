@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir maGeneLearn
 WORKDIR /test
 COPY tests/* ./
 
+WORKDIR /data 
+COPY default_model_files.tar.gz ./   
+
 RUN maGeneLearn --help
 
 WORKDIR /data
