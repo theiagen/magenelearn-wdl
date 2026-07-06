@@ -19,9 +19,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip install --no-cache-dir maGeneLearn
 
-WORKDIR /test
-COPY tests/* ./
-
 WORKDIR /data 
 COPY default_model_files.tar.gz ./   
 
