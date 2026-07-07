@@ -147,10 +147,23 @@ task magenelearn {
   >>>
   output {
     File? split_log = "~{name}_out/00_data_split/split.log"
+    File? train_tsv = "~{name}_out/00_data_split/~{name}_train.tsv"
+    File? test_tsv = "~{name}_out/00_data_split/~{name}_test.tsv"
+    File? chisq_top_features = "~{name}_out/01_chisq/~{name}_top~{k}_features.tsv"
     File? chisq_log = "~{name}_out/01_chisq/chisq.log"
-    File? muvr_log = "~{name}_out/02_muvr/muvr.log"
+    File? muvr_log = "~{name}_out/02_muvr/muvr.log" # Either muvr or boruta will be output
+    File? muvr_min = "~{name}_out/02_muvr/~{name}_muvr_~{model}_min.tsv"
+    File? muvr_max = "~{name}_out/02_muvr/~{name}_muvr_~{model}_max.tsv"
+    File? muvr_mid = "~{name}_out/02_muvr/~{name}_muvr_~{model}_mid.tsv"
+    File? boruta_log = "~{name}_out/02_boruta/boruta.log"
+    File? boruta_min = "~{name}_out/02_boruta/~{name}_boruta_~{model}_min.tsv"
+    File? boruta_max = "~{name}_out/02_boruta/~{name}_boruta_~{model}_max.tsv"
+    File? boruta_mid = "~{name}_out/02_boruta/~{name}_boruta_~{model}_mid.tsv"
     File? final_features_log = "~{name}_out/03_final_features/extract.log"
+    File? final_features_test = "~{name}_out/03_final_features/~{name}_test.tsv"
+    File? final_features_train = "~{name}_out/03_final_features/~{name}_train.tsv"
     File? train_log = "~{name}_out/04_model/train.log"
+    File? train_model_file = "~{name}_out/04_model/~{name}_~{model}_~{upsampling}.joblib"
     String version = read_string("VERSION")
   }
   runtime {
