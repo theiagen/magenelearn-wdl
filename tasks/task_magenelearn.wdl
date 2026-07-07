@@ -60,7 +60,7 @@ task magenelearn {
     String lr_penalty = "l2"
     
     Int disk_size = 100
-    String docker = "magenelearn-test:latest"
+    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/magenelearn:0.1.0"
     Int memory = 16
     Int cpu = 4
   }
