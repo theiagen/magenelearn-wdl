@@ -73,7 +73,7 @@ task magenelearn {
 
     # Required train inputs: meta-file / train-meta / test-meta, name
     if [[ "~{mode}" == "train" ]]; then
-    
+
       # Train meta file selection
       meta_inputs=~{length(select_all([meta_file, train_meta, test_meta]))}
       if [[ "$meta_inputs" -ne 1 ]]; then
@@ -136,7 +136,7 @@ task magenelearn {
         ~{'--group-column ' + group_column} \
         ~{'--features ' + features} \
         ~{'--test-metadata ' + test_metadata} \
-        ~{'--features-file ' + features_file} \
+        ~{'--feature-file ' + features_file} \
         ~{true="--predict-only" false="" predict_only} \
         ~{'--scoring ' + scoring} \
         ~{true="--skip-svm-importance" false="" skip_svm_importance} \
