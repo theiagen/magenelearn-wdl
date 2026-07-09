@@ -32,10 +32,10 @@ task magenelearn {
     Boolean? chisq
     Int k = 100000
     File? chisq_file
-    Boolean? muvr
-    Boolean? boruta
+    Boolean muvr = false
+    Boolean boruta = false
     File? feature_model
-    Boolean? feature_selection_only
+    Boolean feature_selection_only = false
 
     # MUVR-specific Options
     Float dropout_rate = 0.9
@@ -49,14 +49,14 @@ task magenelearn {
     Int boruta_max_iter = 100
 
     # Model-training Options
-    String? upsampling
-    Int? n_iter
+    String upsampling = "none"
+    Int n_iter = 100
     Boolean? no_split
     Int n_splits = 5
     Int n_splits_cv = 7
     String scoring = "balanced_accuracy"
     Int n_jobs = 1 # Defaut to 1 as the tool default is -1
-    String? xgb_policy
+    String xgb_policy = "depthwise"
     String lr_penalty = "l2"
     
     Int disk_size = 100
