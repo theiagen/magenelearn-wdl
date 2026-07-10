@@ -20,7 +20,8 @@ workflow magenelearn_wf {
       input:
         name = run_name,
         features = external_features,
-        label = label
+        label = label,
+        group_column = group_column
     }
   }
   if (run_test){
