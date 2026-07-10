@@ -55,7 +55,7 @@ task magenelearn {
     Int n_splits = 5
     Int n_splits_cv = 7
     String scoring = "balanced_accuracy"
-    Int n_jobs = 1 # Defaut to 1 as the tool default is -1
+    Int n_jobs = 1 # Default to 1 as the tool default is -1
     String xgb_policy = "depthwise"
     String lr_penalty = "l2"
     
