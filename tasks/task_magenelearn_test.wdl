@@ -39,6 +39,7 @@ task magenelearn_test {
 
     maGeneLearn test \
       ~{'--model-file ' + select_first([model_file, "defaults/rfc_random_accuracy_RFC_random.joblib"])} \
+      ~{'--features ' + features} \
       ~{'--features-test ' + features_test} \
       --name ~{name} \
       ~{'--label ' + label} \

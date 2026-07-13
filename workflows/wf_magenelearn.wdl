@@ -11,10 +11,8 @@ workflow magenelearn_wf {
     String? group_column
     String mode = "full"
   }
-
   Boolean run_train = mode == "full" || mode == "train"
   Boolean run_test  = mode == "full" || mode == "test"
-
   if (run_train){
     call run_magenelearn_train.magenelearn_train {
       input:
@@ -31,7 +29,6 @@ workflow magenelearn_wf {
         model_file = magenelearn_train.train_model_file,
         features_file = select_first([magenelearn_train.muvr_min, magenelearn_train.boruta_min]),
         features_test = magenelearn_train.final_features_test,
-        features = external_features,
         label = label,
         group_column = group_column
     }
