@@ -65,7 +65,12 @@ task magenelearn_train {
     echo "DEBUG: Checking contents of compressed default models"
     tar -tzf /data/default_model_files.tar.gz   
 
-    echo "~{name}_~{model}_~{upsampling}" | tee EVAL_NAME # Used downstream for path building 
+    # Train meta file selection
+    meta_inputs=~{length(select_all([meta_file, train_meta, test_meta]))}
+    if [[ "$meta_inputs" -ne 1 ]]; then
+      echo "ERROR: meta_file / train_meta / test_meta are mutually exclusive. Please provide only one" >&2
+      exit 1
+    fi
 
     maGeneLearn train \
       --name ~{name} \
