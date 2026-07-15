@@ -12,6 +12,10 @@ workflow magenelearn_wf {
     String mode = "full"
     File? model_file
     File? features_test 
+    # meta_file, train_meta, and test_meta are mutually exclusive
+    File? meta_file
+    File? train_meta
+    File? test_meta
   }
   Boolean run_train = mode == "full" || mode == "train"
   Boolean run_test  = mode == "full" || mode == "test"
@@ -19,6 +23,9 @@ workflow magenelearn_wf {
     call run_magenelearn_train.magenelearn_train {
       input:
         name = run_name,
+        meta_file = meta_file,
+        train_meta = train_meta,
+        test_meta = test_meta,
         features = external_features,
         label = label,
         group_column = group_column
