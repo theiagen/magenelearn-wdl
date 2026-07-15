@@ -18,24 +18,38 @@ workflow magenelearn_wf {
     File? test_meta
   }
   Boolean run_train = mode == "full" || mode == "train"
-  Boolean run_test  = mode == "full" || mode == "test"
+
   if (run_train){
-    call run_magenelearn_train.magenelearn_train {
-      input:
-        name = run_name,
-        meta_file = meta_file,
-        train_meta = train_meta,
-        test_meta = test_meta,
-        features = external_features,
-        label = label,
-        group_column = group_column
+    # Validate mutually exclusive metadata inputs and output string due to lack of WDL functionality
+    if (length(select_all([meta_file, train_meta, test_meta])) == 1) {
+      Boolean valid_inputs = true
+      String input_validation_pass = "PASS"
+    }
+    if (length(select_all([meta_file, train_meta, test_meta])) != 1){
+      String input_validation_err = "ERROR: Provide one meta_file, train_meta, or test_meta as they are mututally exclusive."
+    }
+    if (defined(valid_inputs)) {
+      call run_magenelearn_train.magenelearn_train {
+        input:
+          name = run_name,
+          meta_file = meta_file,
+          train_meta = train_meta,
+          test_meta = test_meta,
+          features = external_features,
+          label = label,
+          group_column = group_column
+      }
     }
   }
+
+  # Check for completion of train and mode
+  Boolean run_test  = (mode == "full" && defined(magenelearn_train.train_complete)) || mode == "test"
+
   if (run_test){
     call run_magenelearn_test.magenelearn_test {
       input:
         name = run_name,
-        model_file = select_first([magenelearn_train.train_model_file, model_file])
+        model_file = select_first([magenelearn_train.train_model_file, model_file]),
         features_file = select_first([magenelearn_train.muvr_min, magenelearn_train.boruta_min]),
         features_test = select_first([magenelearn_train.final_features_test, features_test]),
         label = label,
@@ -64,6 +78,7 @@ workflow magenelearn_wf {
     File? train_log = magenelearn_train.train_log
     File? train_model_file = magenelearn_train.train_model_file
     File? test_eval_log = magenelearn_test.test_eval_log
+    String input_validation_out = select_first([input_validation_pass, input_validation_err])
     Array[File]? classification_report = magenelearn_test.classification_report
     Array[File]? confusion_matrix = magenelearn_test.confusion_matrix
     Array[File]? test_predictions_probabilities = magenelearn_test.test_predictions_probabilities

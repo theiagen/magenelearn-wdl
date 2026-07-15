@@ -110,6 +110,8 @@ task magenelearn_train {
       ~{'--boruta-alpha ' + boruta_alpha} \
       ~{'--boruta-max-iter ' + boruta_max_iter} \
       --output-dir "~{name}_out"
+
+     echo "PASS" > TRAIN_COMPLETE
   >>>
   output {
     File? split_log = "~{name}_out/00_data_split/split.log"
@@ -130,8 +132,8 @@ task magenelearn_train {
     File? final_features_train = "~{name}_out/03_final_features/~{name}_train.tsv"
     File? train_log = "~{name}_out/04_model/train.log"
     File? train_model_file = "~{name}_out/04_model/~{name}_~{model}_~{upsampling}.joblib"
-    String evaluation_name = read_string("EVAL_NAME")
     String train_version = read_string("VERSION")
+    String train_complete = read_string("TRAIN_COMPLETE")
   }
   runtime {
     docker: docker
