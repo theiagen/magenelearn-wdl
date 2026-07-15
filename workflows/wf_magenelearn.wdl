@@ -1,5 +1,6 @@
 version 1.0
 
+import "../tasks/task_versioning.wdl" as task_versioning
 import "../tasks/task_magenelearn_train.wdl" as run_magenelearn_train
 import "../tasks/task_magenelearn_test.wdl" as run_magenelearn_test
 
@@ -18,6 +19,10 @@ workflow magenelearn_wf {
     File? test_meta
   }
   Boolean run_train = mode == "full" || mode == "train"
+
+  call task_versioning.version_capture{
+    input:
+  }
 
   if (run_train){
     # Validate mutually exclusive metadata inputs and output string due to lack of WDL functionality
@@ -57,6 +62,8 @@ workflow magenelearn_wf {
     }
   }
   output {
+    String magenelearn_wf_version = version_capture.magenelearn_version
+    String magenelearn_wf_date = version_capture.date
     String? magenelearn_train_version = magenelearn_train.train_version
     String? magenelearn_test_version = magenelearn_test.test_version
     File?  split_log = magenelearn_train.split_log
