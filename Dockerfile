@@ -2,8 +2,8 @@ FROM python:3.10-slim as app
 
 ARG MAGENELEARN_VERSION=0.4.0
 
-LABEL maintainer="Andrew Hale"
-LABEL maintainer.email="andrew.hale@theiagen.com"
+LABEL maintainer="Theiagen"
+LABEL maintainer.email="developers@theiagen.com"
 LABEL description="MaGeneLearn, a modular command-line tool for training, evaluating, and applying machine-learning models to bacterial genomics feature tables."
 LABEL version="${MAGENELEARN_VERSION}"
 LABEL base.image="mambaorg/micromamba:2-debian13-slim"
