@@ -12,7 +12,7 @@ task magenelearn_train {
     File? features
     File? features2
     File? features_train
-    String? model
+    String? model # RFC, XGBC, SVM, or LR
     String label = "outcome"
     String group_column = "group"
     String? lineage_col
@@ -35,15 +35,15 @@ task magenelearn_train {
     Float boruta_alpha = 0.05
     Int boruta_max_iter = 100
     # Model-training Options
-    String upsampling = "none"
+    String upsampling = "none" # none, random, smote, enn, smoteenn, random_under
     Int n_iter = 100
     Boolean? no_split
     Int n_splits = 5
     Int n_splits_cv = 7
     String scoring = "balanced_accuracy"
     Int n_jobs = 1 # Default to 1 as the tool default is -1
-    String xgb_policy = "depthwise"
-    String lr_penalty = "l2"
+    String xgb_policy = "depthwise" # depthwise or lossguide
+    String lr_penalty = "l2" # l1, l2, or elasticnet
     Int disk_size = 100
     String docker = "us-docker.pkg.dev/general-theiagen/theiagen/magenelearn:0.2.0"
     Int memory = 16
