@@ -56,6 +56,7 @@ workflow magenelearn_wf {
     # Workflow Outputs
     String magenelearn_wf_version = version_capture.magenelearn_version
     String magenelearn_wf_date = version_capture.date
+    # Both errors will be present when a 'full' mode run fails on inputs while only the related error will be returned when test/train are run individually.
     String input_validation_out = if (defined(train_input_validation_err) && defined(test_input_validation_err))
                 then select_first([train_input_validation_err]) + "; " + select_first([test_input_validation_err])
                 else select_first([train_input_validation_err, test_input_validation_err, "PASS"])
