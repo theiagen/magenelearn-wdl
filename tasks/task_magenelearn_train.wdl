@@ -2,12 +2,9 @@ version 1.0
 
 task magenelearn_train {
   input {
-
     String name
-
     # Test and Predict Options
     File? features_test
-
     # Training Options
     File? meta_file
     File? train_meta # Either meta train or test are used
@@ -16,12 +13,10 @@ task magenelearn_train {
     File? features2
     File? features_train
     String? model
-
     String label = "outcome"
     String group_column = "group"
     String? lineage_col
     String id_col = "SRA"
-
     # Feature-selection Options
     Boolean? chisq
     Int k = 100000
@@ -30,18 +25,15 @@ task magenelearn_train {
     Boolean boruta = false
     File? feature_model
     Boolean feature_selection_only = false
-
     # MUVR-specific Options
     Float dropout_rate = 0.9
     Int muvr_n_repetitions = 10
     Int muvr_n_outer = 5
     Int muvr_n_inner = 4
-
     # Boruta-specific Options
     Int boruta_perc = 100
     Float boruta_alpha = 0.05
     Int boruta_max_iter = 100
-
     # Model-training Options
     String upsampling = "none"
     Int n_iter = 100
@@ -52,7 +44,6 @@ task magenelearn_train {
     Int n_jobs = 1 # Default to 1 as the tool default is -1
     String xgb_policy = "depthwise"
     String lr_penalty = "l2"
-    
     Int disk_size = 100
     String docker = "us-docker.pkg.dev/general-theiagen/theiagen/magenelearn:0.1.0"
     Int memory = 16

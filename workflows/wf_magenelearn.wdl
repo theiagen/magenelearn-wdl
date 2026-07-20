@@ -86,9 +86,9 @@ workflow magenelearn_wf {
     File? train_model_file = magenelearn_train.train_model_file
     File? test_eval_log = magenelearn_test.test_eval_log
     String input_validation_out = select_first([input_validation_pass, input_validation_err])
-    Array[File]? classification_report = magenelearn_test.classification_report
-    Array[File]? confusion_matrix = magenelearn_test.confusion_matrix
-    Array[File]? test_predictions_probabilities = magenelearn_test.test_predictions_probabilities
-    Array[File]? test_predictions = magenelearn_test.test_predictions
+    File? classification_report = magenelearn_test.classification_report
+    File? confusion_matrix = magenelearn_test.confusion_matrix
+    File? test_predictions_probabilities = magenelearn_test.test_predictions_probabilities
+    File? test_predictions = magenelearn_test.test_predictions
   }
 }
