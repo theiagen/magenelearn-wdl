@@ -62,11 +62,13 @@ workflow magenelearn_wf {
     }
   }
   output {
+    # Workflow Outputs
     String magenelearn_wf_version = version_capture.magenelearn_version
     String magenelearn_wf_date = version_capture.date
+    String input_validation_out = select_first([input_validation_pass, input_validation_err])
+    # Train Outputs
     String? magenelearn_train_version = magenelearn_train.train_version
-    String? magenelearn_test_version = magenelearn_test.test_version
-    File?  split_log = magenelearn_train.split_log
+    File? split_log = magenelearn_train.split_log
     File? train_tsv = magenelearn_train.train_tsv
     File? test_tsv = magenelearn_train.test_tsv
     File? chisq_top_features = magenelearn_train.chisq_top_features
@@ -84,8 +86,9 @@ workflow magenelearn_wf {
     File? final_features_train = magenelearn_train.final_features_train
     File? train_log = magenelearn_train.train_log
     File? train_model_file = magenelearn_train.train_model_file
+    # Test Outputs
+    String? magenelearn_test_version = magenelearn_test.test_version
     File? test_eval_log = magenelearn_test.test_eval_log
-    String input_validation_out = select_first([input_validation_pass, input_validation_err])
     File? classification_report = magenelearn_test.classification_report
     File? confusion_matrix = magenelearn_test.confusion_matrix
     File? test_predictions_probabilities = magenelearn_test.test_predictions_probabilities
