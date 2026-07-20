@@ -18,39 +18,27 @@ workflow magenelearn_wf {
     File? train_meta
     File? test_meta
   }
-  Boolean run_train = mode == "full" || mode == "train"
-
   call task_versioning.version_capture{
     input:
   }
-
-  if (run_train){
-    # Validate mutually exclusive metadata inputs and output string due to lack of WDL functionality
-    if (length(select_all([meta_file, train_meta, test_meta])) == 1) {
-      Boolean valid_inputs = true
-      String input_validation_pass = "PASS"
-    }
-    if (length(select_all([meta_file, train_meta, test_meta])) != 1){
-      String input_validation_err = "ERROR: Provide one meta_file, train_meta, or test_meta as they are mututally exclusive."
-    }
-    if (defined(valid_inputs)) {
-      call run_magenelearn_train.magenelearn_train {
-        input:
-          name = run_name,
-          meta_file = meta_file,
-          train_meta = train_meta,
-          test_meta = test_meta,
-          features = external_features,
-          label = label,
-          group_column = group_column
-      }
+  # Validate mutually exclusive metadata inputs and output string due to lack of WDL functionality
+  if ((mode == "full" || mode == "train") && length(select_all([meta_file, train_meta, test_meta])) == 1){
+    call run_magenelearn_train.magenelearn_train {
+      input:
+        name = run_name,
+        meta_file = meta_file,
+        train_meta = train_meta,
+        test_meta = test_meta,
+        features = external_features,
+        label = label,
+        group_column = group_column
     }
   }
-
+  if (length(select_all([meta_file, train_meta, test_meta])) != 1){
+    String train_input_validation_err = "ERROR: Provide one meta_file, train_meta, or test_meta as they are mututally exclusive"
+  }
   # Check for completion of train and mode
-  Boolean run_test  = (mode == "full" && defined(magenelearn_train.train_complete)) || mode == "test"
-
-  if (run_test){
+  if ((mode == "full" && defined(magenelearn_train.train_model_file)) || (mode == "test" && defined(model_file))){
     call run_magenelearn_test.magenelearn_test {
       input:
         name = run_name,
@@ -61,11 +49,16 @@ workflow magenelearn_wf {
         group_column = group_column
     }
   }
+  if ((mode == "full" && !defined(magenelearn_train.train_model_file)) || (mode == "test" && !defined(model_file))){
+    String test_input_validation_err = "ERROR: No model file provided from either user or train task."
+  }
   output {
     # Workflow Outputs
     String magenelearn_wf_version = version_capture.magenelearn_version
     String magenelearn_wf_date = version_capture.date
-    String input_validation_out = select_first([input_validation_pass, input_validation_err])
+    String input_validation_out = if (defined(train_input_validation_err) && defined(test_input_validation_err))
+                then select_first([train_input_validation_err]) + "; " + select_first([test_input_validation_err])
+                else select_first([train_input_validation_err, test_input_validation_err, "PASS"])
     # Train Outputs
     String? magenelearn_train_version = magenelearn_train.train_version
     File? split_log = magenelearn_train.split_log
