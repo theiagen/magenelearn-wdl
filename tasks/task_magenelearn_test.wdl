@@ -4,7 +4,7 @@ task magenelearn_test {
   input {
     String name
     # Test and Predict Options
-    File? model_file
+    File model_file
     File? features_test
     File? features_file
     File? test_metadata
@@ -16,7 +16,7 @@ task magenelearn_test {
     # Model-training Options
     String scoring = "balanced_accuracy"
     Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/magenelearn:0.1.0"
+    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/magenelearn:0.2.0"
     Int memory = 16
     Int cpu = 4
   }
@@ -26,26 +26,18 @@ task magenelearn_test {
 
     output_dir="~{name}_out"
 
-    echo "DEBUG: Checking contents of compressed default models"
-    tar -tzf /data/default_model_files.tar.gz   
-    # These model files are large so saving the extraction until needed to save time. 
-    if [[ ! -f "~{model_file}" ]]; then
-      echo "DEBUG: No model_file provided. Extracting default model-file: rfc_random_accuracy_RFC_random.joblib"
-      tar -xzf /data/default_model_files.tar.gz
-    fi
-
     maGeneLearn test \
-      ~{'--model-file ' + select_first([model_file, "defaults/rfc_random_accuracy_RFC_random.joblib"])} \
+      --name ~{name} \
+      ~{'--model-file ' + model_file} \
       ~{'--features ' + features} \
       ~{'--features-test ' + features_test} \
-      --name ~{name} \
       ~{'--label ' + label} \
       ~{'--group-column ' + group_column} \
       ~{'--features ' + features} \
       ~{'--test-metadata ' + test_metadata} \
       ~{'--feature-file ' + features_file} \
-      ~{true="--predict-only" false="" predict_only} \
       ~{'--scoring ' + scoring} \
+      ~{true="--predict-only" false="" predict_only} \
       ~{true="--skip-svm-importance" false="" skip_svm_importance} \
       --output-dir "$output_dir"
 
